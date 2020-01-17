@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CardList } from "./CardList";
 import axios from "axios";
+import { Button } from "reactstrap";
 
 export default function HomePage(props) {
   const [person, setPerson] = useState({
@@ -9,13 +10,15 @@ export default function HomePage(props) {
   });
 
   // const id = props.match.params.id;
-  const fetch = e => {
+  const fetch = () => {
     axios
       .get("http://localhost:4000/api/users")
       .then(res => {
         console.log(res);
       })
-      .catch(err => [console.log(err.message)]);
+      .catch(err => {
+        console.log(err.message);
+      });
   };
 
   const handleChange = e => {
@@ -25,36 +28,47 @@ export default function HomePage(props) {
     });
   };
 
-  const editUser = () => {};
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:4000/api/users", person)
-      .then(res => [console.log(res)]);
+  const handleSubmit = () => {
+    axios.post("http://localhost:4000/api/users", person).then(res => {
+      console.log(res);
+      fetch();
+    });
   };
 
   return (
     <div>
-      <h1>Node and React</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 style={{ marginBottom: "5%" }}>Node and React</h1>
+      <h2>Enter a Person</h2>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginBottom: "5%"
+        }}
+      >
         <input
           type="text"
           name="name"
-          placholder="Name"
+          placeholder="Name"
           value={person.name}
           onChange={handleChange}
+          style={{ width: "30%", margin: "2% 0" }}
         />
         <input
           type="text"
           name="bio"
-          placholder="Bio"
+          placeholder="Bio"
           value={person.bio}
           onChange={handleChange}
+          style={{ width: "30%", margin: "2% 0" }}
         />
-        <button type="submit">Submit</button>
+        <Button type="submit" color="primary">
+          Submit
+        </Button>
       </form>
-      <CardList editUser={editUser} />
+      <CardList />
     </div>
   );
 }
